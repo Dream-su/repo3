@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>新增设备信息</title>
+	<style>
+
+		/* 表单验证错误样式 */
+		label.error {
+			margin-left: 5px;
+			font-size: small;
+			color: #f00;
+		}
+		select{
+			width: 160px;
+    		height: 30px;
+		}
+	</style>
+</head>
+<body>
+
+<h4>新增设备信息</h4>
+
+<form id="form-addnew">
+	<table cellspacing="10">
+		<tr>
+			<td>设备名称：</td>
+			<td>
+				<input type="text" name="devicename">
+			</td>
+		</tr>
+
+		<tr>
+			<td>型号：</td>
+			<td>
+				<input type="text" name="types">
+			</td>
+		</tr>
+
+		<tr>
+			<td>品牌：</td>
+			<td>
+				<input type="text" name="brand">
+			</td>
+		</tr>
+
+		<tr>
+			<td>类型：</td>
+			<td>
+				<input type="text" name="genre">
+			</td>
+		</tr>
+
+		<tr>
+			<td>状态：</td>
+			<td>
+				<input type="text" name="status">
+			</td>
+		</tr>
+
+		<tr>
+			<td>所在地：</td>
+			<td>
+				<input type="text" name="site">
+			</td>
+		</tr>
+
+		<tr>
+			<td></td>
+			<td>
+				<button id="btn-submit" type="button">保存新增</button>
+				
+			</td>
+		</tr>
+	</table>
+</form>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.validate.min.js"></script>
+
+<script>
+	var form = $("#form-addnew");
+	/* 表单提交 */
+	$("#btn-submit").click(function () {
+		var valid = form.valid();
+		if (valid === false) {
+			return;
+		}
+		// 表单验证通过才允许提交
+		$.ajax({
+			type: "POST",
+			url: "/v1/tags/add",
+			data: form.serialize(),
+			dataType: "json",
+			success: function (json) {
+				if (json.state == 2000) {
+					window.location.href="index.html";
+				} else {
+					alert(json.message);
+				}
+			}
+		});
+	});
+
+</script>
+
+</body>
+</html>

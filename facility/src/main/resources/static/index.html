@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>设备信息</title>
+    <style type="text/css">
+        div{
+            margin: 5px;
+        }
+        select{
+            width: 100px;
+            height: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<p>
+    设备管理系统
+</p>
+
+<table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+    <tr>
+        <th>设备编号</th>
+        <th>设备名称</th>
+        <th>型号</th>
+        <th>品牌</th>
+        <th>类型</th>
+        <th>状态</th>
+        <th>所在地</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody id="tbody">
+    <tr>
+        <td>1</td>
+        <td>1</td>
+        <td>666</td>
+        <td>666</td>
+        <td>666</td>
+        <td>666666</td>
+        <td>666</td>
+        <td>
+            <button type="button" onclick="sites">状态修改</button>
+            <button type="button" onclick="types">编辑</button>
+            <button type="button" onclick="id">删除</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<script src="js/jquery.min.js"></script>
+<script type="text/javascript">
+    /* 加载设备信息列表 */
+    $.ajax({
+        type: "POST",
+        url: "/v1/tags/list",
+        data: {},
+        dataType: "json",
+        success: function (json) {
+            if (json.state == 2000) {
+                var data = json.data;
+                // 清空tbody中原有内容
+                var tbody = $("#tbody").empty();
+                for (var i = 0; i < data.length; i++) {
+                    // 构建html模版
+                    //console.log(age)
+                    var html = '<tr>' +
+                        '<td>#{id}</td>' + //0000000
+                        '<td>#{devicename}</td>' +
+                        '<td>#{types}</td>' +
+                        '<td>#{brand}</td>' +
+                        '<td>#{genre}</td>' +
+                        '<td>#{status}</td>' +
+                        '<td>#{site}</td>' +
+                        '<td>'+
+                    '<button type="button" onclick="edit(#{id})">设备信息编辑</button>' +
+                    '<button type="button" onclick="site(#{id})">状态修改</button>' +
+                        '<button type="button" onclick="delStu(#{id})">删除</button>' +
+                        '</tr>';
+                    // 替换占位符的值
+                    html = html.replace("#{id}", data[i].id);
+                    html = html.replace("#{devicename}", data[i].devicename);
+                    html = html.replace("#{types}", data[i].types);
+                    html = html.replace("#{brand}", data[i].brand);
+                    html = html.replace("#{genre}", data[i].genre);
+                    html = html.replace("#{status}", data[i].status);
+                    html = html.replace("#{site}", data[i].site);
+                    html = html.replace(/#{id}/g, data[i].id);
+                    // 追加到tbody中
+                    tbody.append(html);
+                }
+            } else {
+                alert(json.message);
+            }
+        }
+    });
+
+    /* 编辑事件 */
+    function edit(id) {
+        //alert(">>>>>>>>>>>>"+id);
+        document.cookie="id="+id;
+        location.href = "update.html";
+    }
+    /* 状态编辑事件 */
+    function site(id) {
+        //alert(">>>>>>>>>>>>"+id);
+        document.cookie="id="+id;
+        location.href = "update2.html";
+    }
+    /* 删除事件 */
+    function delStu(id) {
+        if (!confirm("确认要删除吗？")) {
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/v1/tags/delete",
+            data: {"id": id},
+            dataType: "json",
+            success: function (json) {
+                if (json.state == 2000) {
+                    alert("删除成功！");
+                    location.reload();
+                } else {
+                    alert(json.message);
+                }
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

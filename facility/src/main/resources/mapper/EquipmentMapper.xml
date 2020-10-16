@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.facility.mapper.InquireMapper">
+    <resultMap type="cn.tedu.facility.entity.Equipment" id="stuMap">
+        <id column="id" property="id"/>
+        <result column="devicename" property="devicename"/>
+        <result column="types" property="types"/>
+        <result column="brand" property="brand"/>
+        <result column="genre" property="genre"/>
+        <result column="status" property="status"/>
+        <result column="site" property="site"/>
+        <result column="siteid" property="siteid"/>
+        <result column="locationid" property="locationid"/>
+    </resultMap>
+    <!-- 新增设备信息 -->
+    <insert id="addStu" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO equipment(
+				devicename,
+				types,brand,
+				genre,status,
+				site
+			) VALUES (
+				#{devicename},#{types},
+				#{brand},#{genre},#{status},
+				#{site}
+			)
+	</insert>
+    <!-- 查询所有设备信息-->
+    <select id="findAll" resultMap="stuMap">
+        select id,devicename,types,brand,genre,status,site from equipment
+    </select>
+    <!-- 根据id编号删除设备-->
+    <delete id="deleteStu">
+        delete from equipment where id=#{id}
+    </delete>
+    <!-- 根据id查询设备信息 -->
+    <select id="findByStuId" resultMap="stuMap">
+        select id,devicename,types,brand,genre,status,site from equipment where id=#{id}
+	</select>
+    <!-- 根据id修改设备信息 -->
+    <update id="updateByStuId" parameterType="cn.tedu.facility.entity.Equipment">
+		UPDATE
+			equipment
+		SET
+			devicename=#{devicename},types=#{types},brand=#{brand},genre=#{genre},status=#{status},site=#{site}
+		where
+			id=#{id}
+	</update>
+    <!-- 根据id查询设备信息   修改状态  所在地使用-->
+    <select id="findByStuIds" resultMap="stuMap">
+        select id,devicename,types,brand,genre,status,site from equipment where id=#{id}
+	</select>
+    <!-- 根据id修改设备 状态、所在地 信息 -->
+    <update id="updateByStuIds" parameterType="cn.tedu.facility.entity.Equipment">
+		UPDATE
+			equipment
+		SET
+			status=#{status},site=#{site}
+		where
+			id=#{id}
+	</update>
+
+
+</mapper>
